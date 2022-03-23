@@ -1,0 +1,36 @@
+## TODO
+- movimento giocatore
+	- walk
+	- run
+	- jump
+	- fall
+	- crouch
+
+- colpi
+	- punch  (high, middle, low)
+	- kick   (high, middle, low)
+	- shield (middle, low)
+	+ combos
+
+- levels:
+	- platforms
+
+
+## MILESTONES
+
+### v0.1
+- movimento giocatore
+- sprite fisso
+
+
+### v0.2
+- content: walking animation
+- movement:
+	- jump
+	- fall
+- levels: platforms
+
+
+### v0.3
+- animation switch
+- content: 

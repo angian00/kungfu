@@ -1,0 +1,2 @@
+include 'desktop', 'core'
+//enableFeaturePreview 'GRADLE_METADATA'
