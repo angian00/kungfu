@@ -1,6 +1,8 @@
 package com.angian.kungfu
 
+import com.angian.kungfu.screens.PlayScreen
 import com.angian.kungfu.screens.StartScreen
+import com.angian.kungfu.util.log
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Screen
@@ -38,8 +40,10 @@ class KungFuGame: KtxGame<Screen>() {
         im.addProcessor(this.stg)
         Gdx.input.inputProcessor = im
 
-        addScreen(StartScreen(this))
-        setScreen<StartScreen>()
+        //addScreen(StartScreen(this))
+        //setScreen<StartScreen>()
+        addScreen(PlayScreen(this))
+        setScreen<PlayScreen>()
     }
 
 

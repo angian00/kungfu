@@ -1,7 +1,6 @@
 ## TODO
 - movimento giocatore
-	- walk
-	- run
+	x run
 	- jump
 	- fall
 	- crouch
@@ -15,22 +14,24 @@
 - levels:
 	- platforms
 
+## Details
+- window icon
+
 
 ## MILESTONES
 
-### v0.1
-- movimento giocatore
-- sprite fisso
-
-
 ### v0.2
 - content: walking animation
+- hit: punch (sprite: happy)
+
+### v0.3
 - movement:
 	- jump
 	- fall
 - levels: platforms
 
 
-### v0.3
+### v0.4
 - animation switch
-- content: 
+- content: original artwork
+
