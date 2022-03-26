@@ -2,6 +2,12 @@
 # Change Log
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.2] - 2022-03-
+
+### Added
+- walking animation
+- punch key and animation
+
 
 ## [0.1] - 2022-03-24
 

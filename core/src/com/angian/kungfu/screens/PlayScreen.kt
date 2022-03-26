@@ -4,7 +4,7 @@ import com.angian.kungfu.Fighter
 import com.angian.kungfu.GameConstants
 import com.angian.kungfu.KungFuGame
 import com.angian.kungfu.util.log
-import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
@@ -42,4 +42,14 @@ class PlayScreen(private val gameApp: KungFuGame): KtxScreen, InputAdapter() {
         gameApp.im.removeProcessor(this)
         super.dispose()
     }
+
+
+    override fun keyDown(keyCode: Int): Boolean {
+        if (keyCode == Input.Keys.S) {
+            fighter.punch()
+        }
+
+        return false
+    }
+
 }

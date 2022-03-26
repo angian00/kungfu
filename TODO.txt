@@ -21,17 +21,13 @@
 ## MILESTONES
 
 ### v0.2
-- content: walking animation
-- hit: punch (sprite: happy)
-
-### v0.3
 - movement:
 	- jump
 	- fall
 - levels: platforms
 
 
-### v0.4
+### v0.3
 - animation switch
 - content: original artwork
 

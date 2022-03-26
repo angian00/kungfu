@@ -1,30 +1,49 @@
 package com.angian.kungfu
 
+import com.angian.kungfu.GameConstants.ANIM_FRAME_DURATION
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.utils.Array
 import kotlin.math.abs
 
 
-class Fighter: Actor() {
-    private val texture: Texture
-    private val textureRegion: TextureRegion
-    private var velocityVec = Vector2(0f, 0f)
+const val EPSILON = 0.001f
 
+
+class Fighter: Actor() {
+    private val walkAnimation: Animation<TextureRegion>
+    private val punchAnimation: Animation<TextureRegion>
+    private var currAnimation: Animation<TextureRegion>
+
+    private var velocityVec = Vector2(0f, 0f)
+    private var elapsedTime = 0f
+    private var animationPaused = true
+    private var currAnimationStart = 0f
+
+    private val isRunning: Boolean
+    get() {
+        return abs(velocityVec.x) >= EPSILON
+    }
 
     init {
-        val filename = "fighter_idle.png"
-        //walk animation: idle-walk1-walk2
+        val walkFrames = loadFrames("fighter_idle.png", "fighter_walk1.png", "fighter_walk2.png")
+        walkAnimation = Animation<TextureRegion>(ANIM_FRAME_DURATION, walkFrames, Animation.PlayMode.LOOP)
 
-        texture = Texture(filename)
-        textureRegion = TextureRegion(texture)
+        val punchFrames = loadFrames("fighter_happy.png")
+        punchAnimation = Animation<TextureRegion>(3 * ANIM_FRAME_DURATION, punchFrames, Animation.PlayMode.NORMAL)
 
-        this.width = texture.width.toFloat()
-        this.height = texture.height.toFloat()
+        currAnimation = walkAnimation
+
+        this.width = walkAnimation.getKeyFrame(0f).regionWidth.toFloat()
+        this.height = walkAnimation.getKeyFrame(0f).regionHeight.toFloat()
+        this.originX = this.width / 2
+        this.originY = this.height / 2
     }
 
 
@@ -32,7 +51,8 @@ class Fighter: Actor() {
         val localColor = color
         batch?.setColor(localColor.r, localColor.g, localColor.b, localColor.a * parentAlpha)
 
-        batch?.draw(textureRegion, x, y, width, height)
+        val textureRegion = currAnimation.getKeyFrame(elapsedTime - currAnimationStart)
+        batch?.draw(textureRegion, x, y, originX, originY, width, height, scaleX, scaleY, rotation)
 
         batch?.setColor(localColor.r, localColor.g, localColor.b, 1f)
 
@@ -40,8 +60,7 @@ class Fighter: Actor() {
     }
 
 
-    override fun act(dt: Float)
-    {
+    override fun act(dt: Float) {
         applyPhysics(dt)
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -57,6 +76,18 @@ class Fighter: Actor() {
         }
 
         super.act(dt)
+
+        animationPaused = ((currAnimation == walkAnimation) && (!isRunning))
+        if (!animationPaused) {
+            elapsedTime += dt
+
+            if (currAnimation.isAnimationFinished(elapsedTime - currAnimationStart)) {
+                //switch back to walk
+                currAnimationStart = elapsedTime
+                currAnimation = walkAnimation
+            }
+        }
+
     }
 
     private fun applyPhysics(dt: Float) {
@@ -66,4 +97,19 @@ class Fighter: Actor() {
         //belowSensor.setPosition(x + 4, y - 6)
     }
 
+    private fun loadFrames(vararg filenames: String): Array<TextureRegion> {
+        val res = Array<TextureRegion>()
+
+        for (filename in filenames) {
+            res.add(TextureRegion(Texture(filename)))
+        }
+
+        return res
+    }
+
+
+    fun punch() {
+        currAnimation = punchAnimation
+        currAnimationStart = elapsedTime
+    }
 }
