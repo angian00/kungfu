@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 - walking animation
 - punch key and animation
+- movement: jump and fall
 
 
 ## [0.1] - 2022-03-24

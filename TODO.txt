@@ -1,8 +1,5 @@
 ## TODO
 - movimento giocatore
-	x run
-	- jump
-	- fall
 	- crouch
 
 - colpi
@@ -16,14 +13,11 @@
 
 ## Details
 - window icon
-
+- refactor boundaryRectangle
 
 ## MILESTONES
 
 ### v0.2
-- movement:
-	- jump
-	- fall
 - levels: platforms
 
 
