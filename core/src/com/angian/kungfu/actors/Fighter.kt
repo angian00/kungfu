@@ -4,6 +4,10 @@ import com.angian.kungfu.GameConstants
 import com.angian.kungfu.GameConstants.ANIM_JUMP_DURATION
 import com.angian.kungfu.GameConstants.ANIM_PUNCH_DURATION
 import com.angian.kungfu.GameConstants.ANIM_WALK_FRAME_DURATION
+import com.angian.kungfu.screens.PlayScreen
+import com.angian.kungfu.util.Collider
+import com.angian.kungfu.util.log
+import com.angian.kungfu.util.makeBoundaryRectangle
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
@@ -11,6 +15,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.utils.Array
@@ -20,9 +25,10 @@ import kotlin.math.abs
 const val EPSILON = 0.001f
 
 
-class Fighter: Actor() {
-    val belowSensor: Actor
+class Fighter(val screen: PlayScreen): Actor(), Collider {
+    val belowSensor: BelowSensor
     var velocityVec = Vector2(0f, 0f)
+    override val relativeBoundary: Polygon
 
     private val walkAnimation: Animation<TextureRegion>
     private val punchAnimation: Animation<TextureRegion>
@@ -50,14 +56,12 @@ class Fighter: Actor() {
 
     private val isOnSolid: Boolean
     get() {
-        /*
-        for (platform in levelScreen.getPlatforms()) {
-            if (belowOverlaps(platform)) return true
+        for (solid in screen.solids) {
+            if (belowSensor.overlaps(solid))
+                return true
         }
 
         return false
-    */
-        return (y == 0f)
     }
 
     init {
@@ -77,9 +81,11 @@ class Fighter: Actor() {
         this.originX = this.width / 2
         this.originY = this.height / 2
 
+        relativeBoundary = makeBoundaryRectangle()
+
         belowSensor = BelowSensor(this)
-        belowSensor.setVisible(true) //DEBUG
-        //belowSensor.setVisible(false)
+        belowSensor.isVisible = true //DEBUG
+        //belowSensor.isVisible = false
     }
 
 
@@ -166,5 +172,14 @@ class Fighter: Actor() {
 
         currAnimation = jumpAnimation
         currAnimationStart = elapsedTime
+    }
+
+    fun stopJump() {
+        velocityVec.y = 0f
+
+        if (currAnimation != walkAnimation) {
+            currAnimation = walkAnimation
+            currAnimationStart = elapsedTime
+        }
     }
 }

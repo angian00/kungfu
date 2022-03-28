@@ -86,18 +86,4 @@ class Level(filename: String): Actor() {
 
         return list
     }
-
-    fun initSolids() {
-        for (obj in getRectangleList("Solid")) {
-            val props = obj.properties
-
-            val solid = Solid(
-                props["x"] as Float, props["y"] as Float,
-                props["width"] as Float, props["height"] as Float
-            )
-
-            this.stage.addActor(solid)
-        }
-
-    }
 }

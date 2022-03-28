@@ -8,9 +8,6 @@
 	- shield (middle, low)
 	+ combos
 
-- levels:
-	- platforms
-
 ## Details
 - window icon
 - refactor boundaryRectangle

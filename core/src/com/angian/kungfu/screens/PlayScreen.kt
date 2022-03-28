@@ -4,6 +4,7 @@ import com.angian.kungfu.GameConstants
 import com.angian.kungfu.KungFuGame
 import com.angian.kungfu.actors.Fighter
 import com.angian.kungfu.actors.Level
+import com.angian.kungfu.actors.Solid
 import com.angian.kungfu.util.log
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputAdapter
@@ -11,12 +12,14 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import ktx.app.KtxScreen
+import kotlin.math.abs
 
 
 class PlayScreen(private val gameApp: KungFuGame): KtxScreen, InputAdapter() {
     private val bkg: Image
     private val level: Level
     private val fighter: Fighter
+    val solids: Set<Solid>
 
     init {
         log("PlayScreen")
@@ -29,9 +32,10 @@ class PlayScreen(private val gameApp: KungFuGame): KtxScreen, InputAdapter() {
 
         level = Level("level_00.tmx")
         gameApp.stg.addActor(level)
-        level.initSolids()
+        solids = initSolids(level)
 
-        fighter = Fighter()
+        fighter = Fighter(this)
+        fighter.setPosition(0f, 80f)
         gameApp.stg.addActor(fighter)
         gameApp.stg.addActor(fighter.belowSensor)
 
@@ -50,20 +54,18 @@ class PlayScreen(private val gameApp: KungFuGame): KtxScreen, InputAdapter() {
 
 
     private fun update(delta: Float) {
-        /*
-        for (platform in platforms) {
-            if (bobby.overlaps(platform)) {
-                val offset: Vector2 = bobby.preventOverlap(platform)
+        for (solid in solids) {
+            if (fighter.overlaps(solid)) {
+                val offset = fighter.preventOverlap(solid)
                 if (offset != null) {
-                    if (Math.abs(offset.x) > Math.abs(offset.y)) bobby.velocityVec.x = 0 else bobby.velocityVec.y = 0
+                    if (abs(offset.x) > abs(offset.y))
+                        fighter.velocityVec.x = 0f
+                    else {
+                        fighter.velocityVec.y = 0f
+                        fighter.stopJump()
+                    }
                 }
             }
-        }
-        */
-
-        if (fighter.y < 0f) {
-            fighter.y = 0f
-            fighter.velocityVec.y = 0f
         }
     }
 
@@ -84,4 +86,23 @@ class PlayScreen(private val gameApp: KungFuGame): KtxScreen, InputAdapter() {
         return false
     }
 
+
+    private fun initSolids(level: Level): Set<Solid> {
+        val solids = mutableSetOf<Solid>()
+
+        for (obj in level.getRectangleList("Solid")) {
+            val props = obj.properties
+
+            val solid = Solid(
+                props["x"] as Float, props["y"] as Float,
+                props["width"] as Float, props["height"] as Float
+            )
+
+            solids.add(solid)
+
+            gameApp.stg.addActor(solid)
+        }
+
+        return solids
+    }
 }

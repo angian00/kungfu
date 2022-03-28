@@ -1,18 +1,20 @@
 package com.angian.kungfu.actors
 
+import com.angian.kungfu.util.Collider
+import com.angian.kungfu.util.makeBoundaryRectangle
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.scenes.scene2d.Actor
 
-class BelowSensor(private val parent: Fighter): Actor() {
+class BelowSensor(private val parent: Fighter): Actor(), Collider {
     private val texture = Texture("white.png")
-    private val boundary: Polygon
+    override val relativeBoundary: Polygon
 
     init {
         this.setSize(parent.width - 8f, 6f)
 
-        boundary = boundaryRectangle()
+        relativeBoundary = makeBoundaryRectangle()
     }
 
 
@@ -30,14 +32,4 @@ class BelowSensor(private val parent: Fighter): Actor() {
         super.draw(batch, parentAlpha)
     }
 
-    fun boundaryRectangle(): Polygon {
-        val vertices = floatArrayOf(
-            0f, 0f,
-            width, 0f,
-            width, height,
-            0f, height
-        )
-
-        return Polygon(vertices)
-    }
 }
